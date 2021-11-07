@@ -2,10 +2,7 @@ package com.example.restuserstore.controller;
 
 import com.example.restuserstore.request.TagModificationRequest;
 import com.example.restuserstore.request.UserCreateRequest;
-import com.example.restuserstore.response.EmptyJsonResponse;
-import com.example.restuserstore.response.UserCreateResponse;
-import com.example.restuserstore.response.UserListResponse;
-import com.example.restuserstore.response.UserResponse;
+import com.example.restuserstore.response.*;
 import com.example.restuserstore.service.TagService;
 import com.example.restuserstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,27 +36,43 @@ public class UserController {
 
     @RequestMapping(value = "users/{id}", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<?> getUser(@PathVariable String id) throws Exception {
+    ResponseEntity<?> getUser(@PathVariable String id) {
 
-        UserResponse userResponse = userService.getUserById(id);
+        UserResponse userResponse = null;
+        try {
+            userResponse = userService.getUserById(id);
+        } catch (Exception e) {
+            ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+            return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @RequestMapping(value = "users/{id}/tags", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<?> mapTagWithUser(@RequestBody TagModificationRequest tagModificationRequest, @PathVariable String id) throws Exception {
+    ResponseEntity<?> mapTagWithUser(@RequestBody TagModificationRequest tagModificationRequest, @PathVariable String id) {
+        try {
+            tagService.mapTagWithUser(id, tagModificationRequest);
+        } catch (Exception e) {
+            ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+            return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        }
 
-        tagService.mapTagWithUser(id,tagModificationRequest);
-
-        return new ResponseEntity<>(new EmptyJsonResponse(),HttpStatus.OK);
+        return new ResponseEntity<>(new EmptyJsonResponse(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "users", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<?> getUsersByTag(@RequestParam(name = "tags") ArrayList<String> tags) throws Exception {
+    ResponseEntity<?> getUsersByTag(@RequestParam(name = "tags") ArrayList<String> tags) {
+        UserListResponse userListResponse = null;
 
-        UserListResponse  userListResponse=tagService.getUsersByTag(tags);
+        try {
+            userListResponse = tagService.getUsersByTag(tags);
+        } catch (Exception e) {
+            ExceptionResponse exceptionResponse = new ExceptionResponse(e.getMessage());
+            return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<UserListResponse>(userListResponse, HttpStatus.OK);
     }
