@@ -39,6 +39,10 @@ public class TagServiceImpl implements TagService {
 
 
         Long longID = Long.parseLong(id);
+
+        if (longID<1)
+            throw new Exception("Invalid Request");
+
         Optional<User> optionalUser = userRepository.findById(longID);
         if (!optionalUser.isPresent())
             throw new Exception("User Not Found");
@@ -74,6 +78,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public UserListResponse getUsersByTag(ArrayList<String> tags) throws Exception {
+
+        if (tags==null ||tags.size()==0)
+            throw new Exception("Invalid Request");
 
        Optional<List<Tag>> tagOptional=tagRepository.findAllByTagNameIn(tags);
        if(!tagOptional.isPresent()||tagOptional.get().size()==0){

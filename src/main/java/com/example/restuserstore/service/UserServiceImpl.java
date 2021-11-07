@@ -47,7 +47,12 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUserById(String id) throws Exception {
         if (!NumberCheck.isNumeric(id))
             throw new Exception("Invalid Request");
+
         Long longID = Long.parseLong(id);
+
+        if (longID<1)
+            throw new Exception("Invalid Request");
+
         Optional<User> optionalUser=userRepository.findById(longID);
         if(!optionalUser.isPresent())
             throw new Exception("User Not Found");
