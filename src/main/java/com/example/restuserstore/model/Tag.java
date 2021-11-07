@@ -15,6 +15,7 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String tagName;
     private Long expiry;
 
 
@@ -26,6 +27,16 @@ public class Tag {
         this.id = id;
     }
 
+    public String getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
+    }
+
+
+
     public Long getExpiry() {
         return expiry;
     }
@@ -34,6 +45,15 @@ public class Tag {
         this.expiry = expiry;
     }
 
-    @ManyToMany(mappedBy = "tag")
+    @ManyToMany(mappedBy = "tags")
     private List<User> users;
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
 }

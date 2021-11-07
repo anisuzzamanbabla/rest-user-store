@@ -2,6 +2,7 @@ package com.example.restuserstore.model;
 
 import javax.persistence.*;
 import java.util.List;
+import javax.validation.constraints.Size;
 
 /**
  * @author : anisuzzaman
@@ -14,8 +15,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Size(max = 120)
     private String firstName;
+    @Size(max = 120)
     private String lastName;
+
+    @Size(max = 120)
     private String password;
 
     public Long getId() {
@@ -50,7 +55,15 @@ public class User {
         this.password = password;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="tag_id")
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
+    @JoinColumn(name = "tag_id")
     private List<Tag> tags;
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 }
